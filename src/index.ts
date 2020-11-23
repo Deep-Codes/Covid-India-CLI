@@ -3,7 +3,9 @@ import fetch from  "node-fetch";
 import {program} from 'commander';
 import chalk from 'chalk';
 import stateCode from "./helpers/stateCode";
-import { blueText, greenText, headText, purpleText, redText } from "./helpers/color";
+import { blueText, greenText, headText, pinkText, purpleText, redText } from "./helpers/color";
+import { stateArray } from "./helpers/validState";
+import {  dailyStateData, totalStateData } from "./utils/stateData";
 
 const apiUrl : string = `https://api.covid19india.org/v4/data.json`;
 
@@ -22,34 +24,30 @@ const fetchRawData = async (state : string): Promise<void> => {
     .then(res => res.json())
     .catch(err => console.log(err.message));
     // console.log(rawData[state])
-    
-    handleState(
-      rawData[state],
-      'total'
-    );
+      handleState(
+        rawData[state],
+        program.type,
+        state
+      );
 }
-fetchRawData('AP')
+if(stateArray.includes(program.state.toUpperCase())){
+  fetchRawData(program.state.toUpperCase())
+}else{
+  throw new Error('Pass Correct Indian State Code')
+}
 
-interface StateTotal {
-  confirmed: number;
-  deceased:number;
-  other: number;
-  recovered: number;
-  tested: number;
-}
 
 const handleState = (
   tempData : any,
-  dataType : 'total' | 'daily'
+  dataType : 'total' | 'daily' | undefined,
+  state: string
 ) => {
   if(dataType === 'total'){
-    const {confirmed , deceased , other  ,recovered, tested} : StateTotal = tempData[dataType];
-    console.log('');
-    console.log(headText(`COVID-DATA ${stateCode('AP')?.toUpperCase()}`))
-    console.log('');
-    console.log(`CONFIRMED : ${blueText(confirmed.toLocaleString())}`)
-    console.log(`DECEASED  : ${redText(deceased.toLocaleString())}`)
-    console.log(`RECOVERED : ${greenText(recovered.toLocaleString())}`)
-    console.log(`TESTING   : ${purpleText(tested.toLocaleString())}`)
+    totalStateData(tempData['total'] , state);
+  } else if(dataType === 'daily'){
+    dailyStateData(tempData['delta'] , state);
+  } else if (dataType === undefined){
+    totalStateData(tempData['total'] , state);
+    dailyStateData(tempData['delta'] , state);
   }
 }

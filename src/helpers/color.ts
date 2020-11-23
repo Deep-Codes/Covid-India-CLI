@@ -19,3 +19,7 @@ export const blueText = (val :string) => {
 export const headText = (val :string) => {
   return chalk.hex('#fbf7f0').bold.underline(val);
 }
+
+export const pinkText = (val :string) => {
+  return chalk.hex('#c3aed6').bold.underline(val);
+}

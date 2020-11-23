@@ -6,8 +6,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const commander_1 = require("commander");
-const stateCode_1 = __importDefault(require("./helpers/stateCode"));
-const color_1 = require("./helpers/color");
+const validState_1 = require("./helpers/validState");
+const stateData_1 = require("./utils/stateData");
 const apiUrl = `https://api.covid19india.org/v4/data.json`;
 commander_1.program.version('0.0.1', '-v, --vers', 'output the current version');
 commander_1.program
@@ -22,18 +22,23 @@ const fetchRawData = async (state) => {
         .then(res => res.json())
         .catch(err => console.log(err.message));
     // console.log(rawData[state])
-    handleState(rawData[state], 'total');
+    handleState(rawData[state], commander_1.program.type, state);
 };
-fetchRawData('MH');
-const handleState = (tempData, dataType) => {
-    var _a;
+if (validState_1.stateArray.includes(commander_1.program.state.toUpperCase())) {
+    fetchRawData(commander_1.program.state.toUpperCase());
+}
+else {
+    throw new Error('Pass Correct Indian State Code');
+}
+const handleState = (tempData, dataType, state) => {
     if (dataType === 'total') {
-        const { confirmed, deceased, other, recovered, tested } = tempData[dataType];
-        console.log(`COVID-DATA ${(_a = stateCode_1.default('MH')) === null || _a === void 0 ? void 0 : _a.toUpperCase()}`);
-        console.log('');
-        console.log(`CONFIRMED : ${color_1.blueText(confirmed.toLocaleString())}`);
-        console.log(`DECEASED : ${color_1.redText(deceased.toLocaleString())}`);
-        console.log(`RECOVERED : ${color_1.greenText(recovered.toLocaleString())}`);
-        console.log(`TESTING : ${color_1.purpleText(tested.toLocaleString())}`);
+        stateData_1.totalStateData(tempData['total'], state);
+    }
+    else if (dataType === 'daily') {
+        stateData_1.dailyStateData(tempData['delta'], state);
+    }
+    else if (dataType === undefined) {
+        stateData_1.totalStateData(tempData['total'], state);
+        stateData_1.dailyStateData(tempData['delta'], state);
     }
 };
