@@ -12,11 +12,11 @@ exports.totalStateData = (data, state) => {
     console.log('');
     console.log(color_1.headText(`TOTAL COVID-DATA ${(_a = stateCode_1.default(state.toUpperCase())) === null || _a === void 0 ? void 0 : _a.toUpperCase()}`));
     console.log('');
-    console.log(`CONFIRMED : ${color_1.blueText(confirmed.toLocaleString())}`);
-    console.log(`DECEASED  : ${color_1.redText(deceased.toLocaleString())}`);
-    console.log(`RECOVERED : ${color_1.greenText(recovered.toLocaleString())}`);
-    console.log(`TESTING   : ${color_1.purpleText(tested.toLocaleString())}`);
-    console.log(`REC. RATE : ${color_1.pinkText((recovered / confirmed * 100).toFixed(2))}%`);
+    console.log(`CONFIRMED : ${color_1.blueText((confirmed || 'N/A').toLocaleString())}`);
+    console.log(`DECEASED  : ${color_1.redText((deceased || 'N/A').toLocaleString())}`);
+    console.log(`RECOVERED : ${color_1.greenText((recovered || 'N/A').toLocaleString())}`);
+    console.log(`TESTING   : ${color_1.purpleText((tested || 'N/A').toLocaleString())}`);
+    console.log(`REC. RATE : ${color_1.pinkText(((recovered || 1) / (confirmed || 1) * 100).toFixed(2))}%`);
 };
 exports.dailyStateData = (data, state) => {
     var _a;
@@ -24,8 +24,8 @@ exports.dailyStateData = (data, state) => {
     console.log('');
     console.log(color_1.headText(`DAILY COVID-DATA ${(_a = stateCode_1.default(state.toUpperCase())) === null || _a === void 0 ? void 0 : _a.toUpperCase()}`));
     console.log('');
-    console.log(`CONFIRMED : ${color_1.blueText(confirmed.toLocaleString())}`);
-    console.log(`DECEASED  : ${color_1.redText(deceased.toLocaleString())}`);
-    console.log(`RECOVERED : ${color_1.greenText(recovered.toLocaleString())}`);
-    console.log(`TESTING   : ${color_1.purpleText(tested.toLocaleString())}`);
+    console.log(`CONFIRMED : ${color_1.blueText((confirmed || 'N/A').toLocaleString())}`);
+    console.log(`DECEASED  : ${color_1.redText((deceased || 'N/A').toLocaleString())}`);
+    console.log(`RECOVERED : ${color_1.greenText((recovered || 'N/A').toLocaleString())}`);
+    console.log(`TESTING   : ${color_1.purpleText((tested || 'N/A').toLocaleString())}`);
 };
