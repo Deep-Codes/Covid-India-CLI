@@ -11,11 +11,12 @@ import { getIndiaLiveData } from './utils/stateIndia';
 const apiUrl: string = `https://api.covid19india.org/v4/data.json`;
 const timelineUrl: string = `https://api.covid19india.org/data.json`;
 
-program.version('0.0.1', '-v, --vers', 'output the current version');
+program.version('1.0.0', '-v, --vers', 'output the current version');
 program
-  .option('-d, --date <type>', 'Specify Date for Data || Today ')
-  .option('-s, --state <type>', 'state of India')
-  .option('-t, --type <type>', 'get total | daily stats');
+  .option('-d, --date <type>', 'Specify Date dd-mm-yyyy')
+  .option('-s, --state <type>', 'State/UT(Code) of India')
+  .option('-t, --type <type>', 'get Total || Daily stats')
+  .option('-a, --author ', 'Get to know the Author');
 
 program.parse(process.argv);
 
@@ -71,4 +72,8 @@ else {
       // dailyStateData(tempData['delta'] , state);
     }
   };
+}
+
+if(program.author){
+  console.log(`Made by: Deepankar Bhade`)
 }

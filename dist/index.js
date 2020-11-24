@@ -14,11 +14,12 @@ const dateFormat_1 = require("./utils/dateFormat");
 const stateIndia_1 = require("./utils/stateIndia");
 const apiUrl = `https://api.covid19india.org/v4/data.json`;
 const timelineUrl = `https://api.covid19india.org/data.json`;
-commander_1.program.version('0.0.1', '-v, --vers', 'output the current version');
+commander_1.program.version('1.0.0', '-v, --vers', 'output the current version');
 commander_1.program
-    .option('-d, --date <type>', 'Specify Date for Data || Today ')
-    .option('-s, --state <type>', 'state of India')
-    .option('-t, --type <type>', 'get total | daily stats');
+    .option('-d, --date <type>', 'Specify Date dd-mm-yyyy')
+    .option('-s, --state <type>', 'State/UT(Code) of India')
+    .option('-t, --type <type>', 'get Total || Daily stats')
+    .option('-a, --author ', 'Get to know the Author');
 commander_1.program.parse(process.argv);
 // ? If None Arguments are Based
 // > covid-india
@@ -29,8 +30,8 @@ if (!(commander_1.program.date || commander_1.program.state || commander_1.progr
 else {
     const fetchRawData = async (state) => {
         const rawData = await node_fetch_1.default(apiUrl)
-            .then(res => res.json())
-            .catch(err => console.log(err.message));
+            .then((res) => res.json())
+            .catch((err) => console.log(err.message));
         handleState(rawData[state], commander_1.program.type, state);
     };
     if (commander_1.program.date) {
@@ -44,8 +45,8 @@ else {
         const indexOfDate = diffDays_1.diffDays(startDate, dateFormat_1.reverseDateFormat(commander_1.program.date));
         const fetchRawData = async () => {
             const rawData = await node_fetch_1.default(timelineUrl)
-                .then(res => res.json())
-                .catch(err => console.log(err.message));
+                .then((res) => res.json())
+                .catch((err) => console.log(err.message));
             indiaDaily_1.IndiaDaily(rawData['cases_time_series'][indexOfDate]);
         };
         fetchRawData();
@@ -67,7 +68,10 @@ else {
         }
         else if (dataType === undefined) {
             stateData_1.totalStateData(tempData['total'], state);
-            stateData_1.dailyStateData(tempData['delta'], state);
+            // dailyStateData(tempData['delta'] , state);
         }
     };
+}
+if (commander_1.program.author) {
+    console.log(`Made by: Deepankar Bhade`);
 }

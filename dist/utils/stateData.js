@@ -16,7 +16,7 @@ exports.totalStateData = (data, state) => {
     console.log(`DECEASED  : ${color_1.redText((deceased || 'N/A').toLocaleString())}`);
     console.log(`RECOVERED : ${color_1.greenText((recovered || 'N/A').toLocaleString())}`);
     console.log(`TESTING   : ${color_1.purpleText((tested || 'N/A').toLocaleString())}`);
-    console.log(`REC. RATE : ${color_1.pinkText(((recovered || 1) / (confirmed || 1) * 100).toFixed(2))}%`);
+    console.log(`REC. RATE : ${color_1.pinkText((((recovered || 1) / (confirmed || 1)) * 100).toFixed(2))}%`);
 };
 exports.dailyStateData = (data, state) => {
     var _a;
