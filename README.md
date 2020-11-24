@@ -38,16 +38,16 @@ Options:
 
 Gives Live India's and State/UT Cumulative and Daily Changes by Cases , Deceased and Recoveries.
 
-![Covid-India](./media/covid-india.png)
+<img width="500" src="./media/covid-india.png" alt="logo">
 
 `covid-india -d <dd-mm-yyyy>`
 
 Gives Covid Data on the Specified Date (dd-mm-yyyy) format
 
-![Date](./media/date.png)
+<img width="500" src="./media/date.png" alt="logo">
 
 `covid-india -s <state-code>`
 
 Gives Covid Data on the Specified Date (dd-mm-yyyy) format
 
-![Date](./media/state.png)
+<img width="500" src="./media/state.png" alt="logo">
