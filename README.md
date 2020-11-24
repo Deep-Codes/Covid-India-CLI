@@ -18,7 +18,9 @@ Made with the API by https://github.com/covid19india
 
 ## Install 🕹
 
-`npm i -g covid-india` or `npm i covid-india`
+`npm install -g @deepcodes/covid-india-cli`
+
+[Npm Link](https://www.npmjs.com/package/@deepcodes/covid-india-cli)
 
 ## Usage 🧪
 
