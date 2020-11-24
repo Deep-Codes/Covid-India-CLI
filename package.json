@@ -9,9 +9,9 @@
   "bin": {
     "covid-india": "dist/index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["covid-india","covid-cli","cli tool","covid19"],
+  "author": "Deepankar Bhade",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^14.14.9",
     "@types/node-fetch": "^2.5.7",
