@@ -6,6 +6,7 @@ import {  dailyStateData, totalStateData } from "./utils/stateData";
 import { diffDays } from "./helpers/diffDays";
 import { IndiaDaily } from "./utils/indiaDaily";
 import { reverseDateFormat } from "./utils/dateFormat";
+import { getIndiaLiveData } from "./utils/stateIndia";
 
 const apiUrl : string = `https://api.covid19india.org/v4/data.json`;
 const timelineUrl : string =  `https://api.covid19india.org/data.json`
@@ -21,22 +22,7 @@ program.parse(process.argv);
 // ? If None Arguments are Based
 // > covid-india
 if(!(program.date || program.state || program.type)){
-  let datetime = new Date();
-  const startDate = '2020-01-30'
-  const todayDate = datetime.toISOString().slice(0,10)
-  const indexOfDate = diffDays(startDate,todayDate);
-  const fetchRawData = async (): Promise<void> => {
-    const rawData = await fetch(timelineUrl)
-      .then(res => res.json())
-      .catch(err => console.log(err.message));
-      // ? Handling Today's Data that is not released yet , giving yesterday's data
-      if(!rawData['cases_time_series'][indexOfDate]){
-        IndiaDaily(rawData['cases_time_series'][indexOfDate-1])  
-      }else{ // today's data
-        IndiaDaily(rawData['cases_time_series'][indexOfDate])  
-      }
-  }
-  fetchRawData();
+  getIndiaLiveData();
 }
 // ? If any argument is passed
 else{
