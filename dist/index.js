@@ -10,15 +10,16 @@ const validState_1 = require("./helpers/validState");
 const stateData_1 = require("./utils/stateData");
 const diffDays_1 = require("./helpers/diffDays");
 const indiaDaily_1 = require("./utils/indiaDaily");
+const dateFormat_1 = require("./utils/dateFormat");
 const apiUrl = `https://api.covid19india.org/v4/data.json`;
 const timelineUrl = `https://api.covid19india.org/data.json`;
 commander_1.program.version('0.0.1', '-v, --vers', 'output the current version');
 commander_1.program
     .option('-d, --date <type>', 'Specify Date for Data || Today ')
-    .option('-st, --state <type>', 'state of India')
+    .option('-s, --state <type>', 'state of India')
     .option('-t, --type <type>', 'get total | daily stats');
 commander_1.program.parse(process.argv);
-//  If None Arguments are Based
+// ? If None Arguments are Based
 // > covid-india
 if (!(commander_1.program.date || commander_1.program.state || commander_1.program.type)) {
     let datetime = new Date();
@@ -29,10 +30,17 @@ if (!(commander_1.program.date || commander_1.program.state || commander_1.progr
         const rawData = await node_fetch_1.default(timelineUrl)
             .then(res => res.json())
             .catch(err => console.log(err.message));
-        indiaDaily_1.IndiaDaily(rawData['cases_time_series'][indexOfDate]);
+        // ? Handling Today's Data that is not released yet , giving yesterday's data
+        if (!rawData['cases_time_series'][indexOfDate]) {
+            indiaDaily_1.IndiaDaily(rawData['cases_time_series'][indexOfDate - 1]);
+        }
+        else { // today's data
+            indiaDaily_1.IndiaDaily(rawData['cases_time_series'][indexOfDate]);
+        }
     };
     fetchRawData();
 }
+// ? If any argument is passed
 else {
     const fetchRawData = async (state) => {
         const rawData = await node_fetch_1.default(apiUrl)
@@ -47,10 +55,8 @@ else {
           ? making it the index => 0 and the respective
           ? dates being the difference and the index of the array
         */
-        let datetime = new Date();
         const startDate = '2020-01-30';
-        const todayDate = datetime.toISOString().slice(0, 10);
-        const indexOfDate = diffDays_1.diffDays(startDate, commander_1.program.date);
+        const indexOfDate = diffDays_1.diffDays(startDate, dateFormat_1.reverseDateFormat(commander_1.program.date));
         const fetchRawData = async () => {
             const rawData = await node_fetch_1.default(timelineUrl)
                 .then(res => res.json())
