@@ -65,5 +65,3 @@ export const getIndiaLiveData = async (): Promise<void> => {
   console.log(headText('INDIA COVID DATA REGION WISE\n'));
   console.log(asTable(finalSortedData));
 };
-
-

@@ -1,4 +1,4 @@
-const stateCode = function (name : string) {
+const stateCode = function (name: string) {
   if (name === 'MH') {
     return 'Maharashtra';
   } else if (name === 'TN') {
