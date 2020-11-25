@@ -9,22 +9,25 @@ import { reverseDateFormat } from './utils/dateFormat';
 import { getIndiaLiveData } from './utils/stateIndia';
 import { testResultsIndia} from './utils/indiaTests';
 import { redText } from './helpers/color';
+import { stateTimeline } from './utils/stateTimeline';
 
 const apiUrl: string = `https://api.covid19india.org/v4/data.json`;
 const timelineUrl: string = `https://api.covid19india.org/data.json`;
+const stateTimelineUrl : string = `https://api.covid19india.org/v4/data-all.json`;
 
 program.version('1.0.0', '-v, --vers', 'output the current version');
 program
   .option('-d, --date <type>', 'Specify Date dd-mm-yyyy')
   .option('-s, --state <type>', 'State/UT(Code) of India')
   .option('-t, --test <type>', 'Specify Date dd-mm-yyyy')
+  .option('-st, --timeline <type>', 'State Wise Data on a Date')
   .option('-a, --author ', 'Get to know the Author');
 
 program.parse(process.argv);
 
 // ? If None Arguments are Based
 // > covid-india
-if (!(program.date || program.state || program.test)) {
+if (!(program.date || program.state || program.test || program.timeline)) {
   getIndiaLiveData();
 }
 // ? If any argument is passed
@@ -61,7 +64,7 @@ else {
   } 
   // ? COVID STATS BY STATE / UT
   // * covid-india -s 'MH'
-  else if(program.state && !(program.date || program.test)) {
+  else if(program.state && !(program.date || program.test || program.timeline)) {
     if (stateArray.includes(program.state.toUpperCase())) {
       fetchRawData(program.state.toUpperCase());
     } else {
@@ -70,7 +73,7 @@ else {
   }
   // ? COVID TESTS 
   // * covid-india -ts '14-06-2020'
-  else if(program.test && !(program.date || program.state)){
+  else if(program.test && !(program.date || program.state || program.timeline)){
     //  Init Date : 18-03-2020
     const fetchRawData = async (): Promise<void> => {
       const rawData = await fetch(timelineUrl)
@@ -84,6 +87,12 @@ else {
       else testResultsIndia(sendData[0] , program.test);
     };
     fetchRawData();
+  }
+  else if(program.timeline && !(program.date || program.state || program.test)){
+    // console.log('State and Date :'+program.timeline )
+    // console.log(program.timeline.split('-').reverse().join('-'))
+    stateTimeline(program.timeline.split('-').reverse().join('-'))
+    // stateTime
   }
   // ? COVID 
   const handleState = (
