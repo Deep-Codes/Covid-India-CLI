@@ -7,6 +7,7 @@ import { diffDays } from './helpers/diffDays';
 import { IndiaDaily } from './utils/indiaDaily';
 import { reverseDateFormat } from './utils/dateFormat';
 import { getIndiaLiveData } from './utils/stateIndia';
+import { testResultsIndia} from './utils/indiaTests';
 
 const apiUrl: string = `https://api.covid19india.org/v4/data.json`;
 const timelineUrl: string = `https://api.covid19india.org/data.json`;
@@ -16,13 +17,14 @@ program
   .option('-d, --date <type>', 'Specify Date dd-mm-yyyy')
   .option('-s, --state <type>', 'State/UT(Code) of India')
   .option('-t, --type <type>', 'get Total || Daily stats')
+  .option('-ts, --test <type>', 'Specify Date dd-mm-yyyy')
   .option('-a, --author ', 'Get to know the Author');
 
 program.parse(process.argv);
 
 // ? If None Arguments are Based
 // > covid-india
-if (!(program.date || program.state || program.type)) {
+if (!(program.date || program.state || program.type || program.test)) {
   getIndiaLiveData();
 }
 // ? If any argument is passed
@@ -34,6 +36,8 @@ else {
     handleState(rawData[state], program.type, state);
   };
 
+  // ? COVID INDIA STATS BY DATE
+  // * covid-india -d '14-06-2020'
   if (program.date) {
     /*
       ? Logic for India Data 'Date-Specific'
@@ -50,12 +54,29 @@ else {
       IndiaDaily(rawData['cases_time_series'][indexOfDate]);
     };
     fetchRawData();
-  } else {
+  } 
+  // ? COVID STATS BY STATE / UT
+  // * covid-india -s 'MH'
+  else if(program.state) {
     if (stateArray.includes(program.state.toUpperCase())) {
       fetchRawData(program.state.toUpperCase());
     } else {
       throw new Error('Pass Correct Indian State/UT Code');
     }
+  }
+  // ? COVID TESTS 
+  // * covid-india -ts '14-06-2020'
+  else if(program.test){
+    //  Init Date : 18-03-2020
+    const startDate = '2020-03-18';
+    const indexOfDate = diffDays(startDate, reverseDateFormat(program.test));
+    const fetchRawData = async (): Promise<void> => {
+      const rawData = await fetch(timelineUrl)
+        .then((res) => res.json())
+        .catch((err) => console.log(err.message));
+      testResultsIndia(rawData['tested'][indexOfDate]);
+    };
+    fetchRawData();
   }
 
   const handleState = (

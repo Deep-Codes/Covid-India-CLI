@@ -9,7 +9,12 @@
   "bin": {
     "covid-india": "dist/index.js"
   },
-  "keywords": ["covid-india","covid-cli","cli tool","covid19"],
+  "keywords": [
+    "covid-india",
+    "covid-cli",
+    "cli tool",
+    "covid19"
+  ],
   "author": "Deepankar Bhade",
   "license": "MIT",
   "devDependencies": {
