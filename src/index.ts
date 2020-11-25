@@ -17,15 +17,14 @@ program.version('1.0.0', '-v, --vers', 'output the current version');
 program
   .option('-d, --date <type>', 'Specify Date dd-mm-yyyy')
   .option('-s, --state <type>', 'State/UT(Code) of India')
-  .option('-t, --type <type>', 'get Total || Daily stats')
-  .option('-ts, --test <type>', 'Specify Date dd-mm-yyyy')
+  .option('-t, --test <type>', 'Specify Date dd-mm-yyyy')
   .option('-a, --author ', 'Get to know the Author');
 
 program.parse(process.argv);
 
 // ? If None Arguments are Based
 // > covid-india
-if (!(program.date || program.state || program.type || program.test)) {
+if (!(program.date || program.state || program.test)) {
   getIndiaLiveData();
 }
 // ? If any argument is passed
@@ -34,12 +33,12 @@ else {
     const rawData = await fetch(apiUrl)
       .then((res) => res.json())
       .catch((err) => console.log(err.message));
-    handleState(rawData[state], program.type, state);
+    handleState(rawData[state], state);
   };
 
   // ? COVID INDIA STATS BY DATE
   // * covid-india -d '14-06-2020'
-  if (program.date) {
+  if (program.date && !(program.state || program.test)) {
     /*
       ? Logic for India Data 'Date-Specific'
       ? Since the API data starts from 2020-01-30
@@ -62,7 +61,7 @@ else {
   } 
   // ? COVID STATS BY STATE / UT
   // * covid-india -s 'MH'
-  else if(program.state) {
+  else if(program.state && !(program.date || program.test)) {
     if (stateArray.includes(program.state.toUpperCase())) {
       fetchRawData(program.state.toUpperCase());
     } else {
@@ -71,7 +70,7 @@ else {
   }
   // ? COVID TESTS 
   // * covid-india -ts '14-06-2020'
-  else if(program.test){
+  else if(program.test && !(program.date || program.state)){
     //  Init Date : 18-03-2020
     const fetchRawData = async (): Promise<void> => {
       const rawData = await fetch(timelineUrl)
@@ -81,26 +80,19 @@ else {
       // ? there's voids in dates so it would fetch data of incorrect dates
       const date = (program.test).replace(/-/g,'/')
       const sendData = rawData['tested'].filter((dt : any) => (dt['testedasof'] ) === date )
-      if(sendData !== []) console.log(redText(`No Data Found For the Date: ${program.test}`))
-      else testResultsIndia(sendData[0]);
+      if(!sendData[0]) console.log(redText(`No Data Found For the Date: ${program.test}`))
+      else testResultsIndia(sendData[0] , program.test);
     };
     fetchRawData();
   }
-
+  // ? COVID 
   const handleState = (
     tempData: any,
-    dataType: 'total' | 'daily' | undefined,
     state: string
   ) => {
-    if (dataType === 'total') {
-      totalStateData(tempData['total'], state);
-    } else if (dataType === 'daily') {
-      dailyStateData(tempData['delta'], state);
-    } else if (dataType === undefined) {
       totalStateData(tempData['total'], state);
       // dailyStateData(tempData['delta'] , state);
     }
-  };
 }
 
 if(program.author){

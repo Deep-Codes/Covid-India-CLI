@@ -8,7 +8,7 @@ interface TestResult {
   samplereportedtoday :string
 }
 
-export const testResultsIndia = (data : any) => {
+export const testResultsIndia = (data : any , date : string) => {
   const {
     testedasof,
     totalindividualstested,
@@ -16,8 +16,7 @@ export const testResultsIndia = (data : any) => {
     totalsamplestested,
     samplereportedtoday,
   } : TestResult= data;
-  console.log(data)
-  console.log(`COVID TESTING DATA`);
+  console.log(`COVID TESTING DATA ${date}`);
   console.log("");
   console.log(`TESTED AS OF : ${blueText(
     (testedasof || 'N/A')
