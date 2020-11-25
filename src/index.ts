@@ -8,6 +8,7 @@ import { IndiaDaily } from './utils/indiaDaily';
 import { reverseDateFormat } from './utils/dateFormat';
 import { getIndiaLiveData } from './utils/stateIndia';
 import { testResultsIndia} from './utils/indiaTests';
+import { redText } from './helpers/color';
 
 const apiUrl: string = `https://api.covid19india.org/v4/data.json`;
 const timelineUrl: string = `https://api.covid19india.org/data.json`;
@@ -51,7 +52,11 @@ else {
       const rawData = await fetch(timelineUrl)
         .then((res) => res.json())
         .catch((err) => console.log(err.message));
-      IndiaDaily(rawData['cases_time_series'][indexOfDate]);
+      if(rawData['cases_time_series'][indexOfDate]){
+        IndiaDaily(rawData['cases_time_series'][indexOfDate]);
+      }else{
+        console.log(redText(`No Data Found For the Date: ${program.date}`))
+      }
     };
     fetchRawData();
   } 
@@ -61,20 +66,23 @@ else {
     if (stateArray.includes(program.state.toUpperCase())) {
       fetchRawData(program.state.toUpperCase());
     } else {
-      throw new Error('Pass Correct Indian State/UT Code');
+      console.log(redText('Pass Correct Indian State/UT Code'));
     }
   }
   // ? COVID TESTS 
   // * covid-india -ts '14-06-2020'
   else if(program.test){
     //  Init Date : 18-03-2020
-    const startDate = '2020-03-18';
-    const indexOfDate = diffDays(startDate, reverseDateFormat(program.test));
     const fetchRawData = async (): Promise<void> => {
       const rawData = await fetch(timelineUrl)
         .then((res) => res.json())
         .catch((err) => console.log(err.message));
-      testResultsIndia(rawData['tested'][indexOfDate]);
+      // ? Getting results with INDEX is not possible because
+      // ? there's voids in dates so it would fetch data of incorrect dates
+      const date = (program.test).replace(/-/g,'/')
+      const sendData = rawData['tested'].filter((dt : any) => (dt['testedasof'] ) === date )
+      if(sendData !== []) console.log(redText(`No Data Found For the Date: ${program.test}`))
+      else testResultsIndia(sendData[0]);
     };
     fetchRawData();
   }

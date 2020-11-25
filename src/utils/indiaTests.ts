@@ -4,7 +4,8 @@ interface TestResult {
   testedasof : string,
   totalindividualstested : string,
   totalpositivecases : string ,
-  totalsamplestested : string 
+  totalsamplestested : string ,
+  samplereportedtoday :string
 }
 
 export const testResultsIndia = (data : any) => {
@@ -12,7 +13,8 @@ export const testResultsIndia = (data : any) => {
     testedasof,
     totalindividualstested,
     totalpositivecases,
-    totalsamplestested
+    totalsamplestested,
+    samplereportedtoday,
   } : TestResult= data;
   console.log(data)
   console.log(`COVID TESTING DATA`);
@@ -22,6 +24,9 @@ export const testResultsIndia = (data : any) => {
   )}`);
   console.log(`SAMPLES TESTED : ${greenText(
     totalindividualstested === '' ? 'Not Found' : parseInt(totalindividualstested).toLocaleString()
+  )}`);
+  console.log(`SAMPLES REPORTED TODAY : ${greenText(
+    samplereportedtoday === '' ? 'Not Found' : parseInt(samplereportedtoday).toLocaleString()
   )}`);
   console.log(`POSTITVE TESTED : ${redText(
     totalpositivecases === '' ? 'Not Found' : parseInt(totalpositivecases).toLocaleString()
